@@ -1,0 +1,48 @@
+{
+  "name": "nabeghe/helpers",
+  "description": "A helper library that includes all my helpers in one package for PHP.",
+  "keywords": [
+    "library", "helper", "helpers", "support"
+  ],
+  "type": "library",
+  "version": "0.1.0",
+  "homepage": "https://github.com/nabeghe/helpers-php",
+  "license": "MIT",
+  "autoload": {
+    "files": [
+      "src/functions.php"
+    ],
+    "psr-4": {
+      "Nabeghe\\Alphanum\\": "src/Alphanum",
+      "Nabeghe\\Arrayer\\": "src/Arrayer",
+      "Nabeghe\\Buildify\\": "src/Buildify",
+      "Nabeghe\\Cally\\": "src/Cally",
+      "Nabeghe\\Colory\\": "src/Colory",
+      "Nabeghe\\Dati\\": "src/Dati",
+      "Nabeghe\\HeadersReader\\": "src/HeadersReader",
+      "Nabeghe\\Levex\\": "src/Levex",
+      "Nabeghe\\Matcher\\": "src/Matcher",
+      "Nabeghe\\Mem\\": "src/Mem",
+      "Nabeghe\\Reflecty\\": "src/Reflecty",
+      "Nabeghe\\Servery\\": "src/Servery",
+      "Nabeghe\\Shortnum\\": "src/Shortnum",
+      "Nabeghe\\SimpleCipher\\": "src/SimpleCipher",
+      "Nabeghe\\Stringer\\": "src/Stringer",
+      "Nabeghe\\Tepade\\": "src/Tepade",
+      "Nabeghe\\Traituctor\\": "src/Traituctor",
+      "Nabeghe\\Yielder\\": "src/Yielder"
+    }
+  },
+  "authors": [
+    {
+      "name": "Hadi Akbarzadeh",
+      "email": "hadicoder@gmail.com",
+      "homepage": "https://elatel.ir",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": ">=7.4",
+    "ext-json": "*"
+  }
+}
