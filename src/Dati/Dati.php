@@ -50,7 +50,7 @@ class Dati
         for ($i = 1; $i < $datetimes_count; $i++) {
             $datetime = $datetimes[$i];
             $prev_datetime = $datetimes[$i - 1];
-            if (static::diff($datetime, $prev_datetime, 'seconds') <= $offset) {
+            if (static::diff($datetime, $prev_datetime) <= $offset) {
                 $warnings_count++;
             } elseif (!$strict) {
                 $warnings_count--;
@@ -122,38 +122,26 @@ class Dati
     public static function diff($datetime1, $datetime2, $unit = 'seconds')
     {
         $time_interval = abs(strtotime($datetime2) - strtotime($datetime1));
+        $unit = static::sanitizeUnit($unit);
 
         switch ($unit) {
-            case 'y':
-            case 'year':
-            case 'years':
-                $time_interval = $time_interval / 60 / 60 / 24 / 365; // sec => min => hour => day => year
+            case 'minutes':
+                $time_interval = $time_interval / 60; // sec => min
                 break;
-            case 'M':
-            case 'month':
-            case 'months':
-                $time_interval = $time_interval / 60 / 60 / 24 / 30; // sec => min => hour => day => month
-                break;
-            case 'w':
-            case 'week':
-            case 'weeks':
-                $time_interval = $time_interval / 60 / 60 / 24 / 7; // sec => min => hour => day => week
-                break;
-            case 'd':
-            case 'day':
-            case 'days':
-                $time_interval = $time_interval / 60 / 60 / 24; // sec => min => hour => day
-                break;
-            case 'h':
-            case 'hour':
             case 'hours':
                 $time_interval = $time_interval / 60 / 60; // sec => min => hour
                 break;
-            case 'm':
-            case 'min':
-            case 'minute':
-            case 'minutes':
-                $time_interval = $time_interval / 60; // sec => min
+            case 'days':
+                $time_interval = $time_interval / 60 / 60 / 24; // sec => min => hour => day
+                break;
+            case 'weeks':
+                $time_interval = $time_interval / 60 / 60 / 24 / 7; // sec => min => hour => day => week
+                break;
+            case 'months':
+                $time_interval = $time_interval / 60 / 60 / 24 / 30; // sec => min => hour => day => month
+                break;
+            case 'years':
+                $time_interval = $time_interval / 60 / 60 / 24 / 365; // sec => min => hour => day => year
                 break;
         }
 
@@ -173,7 +161,7 @@ class Dati
             $diff = $dt1->diff($dt2);
             $details = array_intersect_key((array) $diff, array_flip(['y', 'm', 'd', 'h', 'i', 's']));
             return $details;
-        } catch (\Throwable $throwable) {
+        } catch (Throwable $throwable) {
         }
 
         return null;
@@ -251,7 +239,7 @@ class Dati
      */
     public static function howLongAgo($datetime1, $datetime2)
     {
-        $diff = (int) self::diff($datetime1, $datetime2, 'seconds');
+        $diff = (int) self::diff($datetime1, $datetime2);
 
         if ($diff >= 31536000) {
             $unit = 'years';
@@ -297,38 +285,42 @@ class Dati
      * @param  string|null  $datetime  Optional. The datetime to which the value and unit should be joined. Default current.
      * @return string Returns the joined datetime.
      */
-    public static function join($value = '+1', $unit = 'days', $datetime = null)
+    public static function join($value = '+1', $unit = 'seconds', $datetime = null)
     {
-        $value = self::resolveJoinableValue($value);
-
-        switch ($unit) {
-            case 's':
-            case 'second':
-            case 'seconds':
-                $unit = 'second';
-                break;
-            case 'm':
-            case 'minute':
-            case 'minutes':
-                $unit = 'minutes';
-                break;
-            case 'h':
-            case 'hour':
-            case 'hours':
-                $unit = 'hour';
-                break;
-            case 'd':
-            case 'day':
-            case 'days':
-                $unit = 'days';
-                break;
-        }
-
+        $value = self::sanitizeJoinableValue($value);
+        $unit = static::sanitizeUnit($unit);
         if ($datetime === null) {
             $datetime = Now::datetimeLocal();
         }
-
         return date(static::FORMAT, strtotime("$value $unit", strtotime($datetime)));
+    }
+
+    public static function parseUnit(?string $value, $default = [0, 'seconds'])
+    {
+        if ($value == '') {
+            return $default;
+        }
+
+        $value = trim($value);
+
+        if (is_numeric($value)) {
+            return [(int) $value, $default[1]];
+        }
+
+        if (!preg_match('/^\d+/', $value, $matches)) {
+            $value = $default[0].$value;
+            if (preg_match('/^\d+/', $value, $matches)) {
+                return $default;
+            }
+        }
+
+        $result = [intval($matches[0]), trim(preg_replace('/^\d+/', '', $value))];
+        if ($result[1] == '') {
+            $result[1] = $default[1];
+        }
+        $result[1] = static::sanitizeUnit($result[1]);
+
+        return $result;
     }
 
     /**
@@ -354,7 +346,7 @@ class Dati
         return (float) number_format((float) $elasped, 2, '.', '');
     }
 
-    protected static function resolveJoinableValue($val)
+    protected static function sanitizeJoinableValue($val)
     {
         $startsWith = function ($haystack, $needle) {
             return 0 === strncmp($haystack, $needle, strlen($needle));
@@ -366,6 +358,49 @@ class Dati
         }
 
         return $val;
+    }
+
+    public static function sanitizeUnit($unit)
+    {
+        switch ($unit) {
+            case 's':
+            case 'sec':
+            case 'second':
+            case 'seconds':
+                return 'seconds';
+            case 'm':
+            case 'min':
+            case 'minute':
+            case 'minutes':
+                return 'minutes';
+            case 'h':
+            case 'hour':
+            case 'hours':
+                return 'hours';
+            case 'd':
+            case 'day':
+            case 'days':
+                return 'days';
+            case 'w':
+            case 'week':
+            case 'weeks':
+                return 'weeks';
+            case 'M':
+            case 'mon':
+            case 'moon':
+            case 'month':
+            case 'months':
+                return 'months';
+            case 'y':
+            case 'year':
+            case 'years':
+                return 'years';
+            default:
+                if (preg_match('/[A-Z]/', $unit)) {
+                    return static::sanitizeUnit(strtolower($unit));
+                }
+                return $unit;
+        }
     }
 
     /**
