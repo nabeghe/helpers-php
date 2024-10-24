@@ -2,9 +2,14 @@
 
 use DateTime;
 use DateTimeZone;
+use Throwable;
+use IntlDateFormatter;
 
 class Dati
 {
+    /**
+     * Standard datetime format.
+     */
     public const FORMAT = 'Y-m-d H:i:s';
 
     /**
@@ -175,6 +180,66 @@ class Dati
     }
 
     /**
+     * Converts datetime format to a pattern usable in {@see IntlDateFormatter}.
+     *
+     * @param  string  $format  The datetiem format.
+     * @return string
+     */
+    public static function formatToPattern($format)
+    {
+        return strtr($format, [
+            'Y' => 'yyyy',
+            'y' => 'yy',
+            'm' => 'MM',
+            'n' => 'M',
+            'd' => 'dd',
+            'j' => 'd',
+            'H' => 'HH',
+            'h' => 'hh',
+            'i' => 'mm',
+            's' => 'ss',
+            'A' => 'a',
+            'P' => 'a',
+            'O' => 'Z',
+        ]);
+    }
+
+    /**
+     * Converts the given Jalali (Shamsi/Persian/Iranian) datetime to the Gregorian calendar.
+     *
+     * @param  string  $datetime  The datetime string.
+     * @param ?string  $format  Optional. The conversion format. Default null (auto).
+     * @param ?string  $timezone  Optional. The conversion timezone. Default null (nothing).
+     * @return false|string|null
+     */
+    public static function fromJalali($datetime, $format = null, $timezone = null)
+    {
+        if (!class_exists('IntlDateFormatter')) {
+            return null;
+        }
+
+        try {
+            $format = $format ?: (static::detectFormat($datetime) ?? static::FORMAT);
+            $pattern = static::formatToPattern($format);
+
+            $formatter = new IntlDateFormatter(
+                'en_US@calendar=persian',
+                IntlDateFormatter::NONE,
+                IntlDateFormatter::NONE,
+                $timezone,
+                IntlDateFormatter::TRADITIONAL,
+                $pattern,
+            );
+            $shamsi_timestamp = $formatter->parse($datetime);
+            $formatter->setCalendar(IntlDateFormatter::GREGORIAN);
+            return $formatter->format($shamsi_timestamp) ?: null;
+        } catch (Throwable) {
+        }
+
+        return null;
+    }
+
+    /**
      * Calculates the difference between two datetimes based on the largest possible unit.
      *
      * @param  string  $datetime1
@@ -266,6 +331,16 @@ class Dati
         return date(static::FORMAT, strtotime("$value $unit", strtotime($datetime)));
     }
 
+    /**
+     * Returns the remaining value until expiration.
+     * Suitable for things like premium subscriptions that have validity.
+     *
+     * @param  string  $datetime1
+     * @param  string  $datetime2
+     * @param  float|int  $validity
+     * @param  string  $unit
+     * @return float|int
+     */
     public static function remaining($datetime1, $datetime2, $validity = 1.0, $unit = 'seconds')
     {
         $validity = abs($validity);
@@ -291,6 +366,50 @@ class Dati
         }
 
         return $val;
+    }
+
+    /**
+     * Converts the given Gregorian datetime to the Jalali (Shamsi/Persian/Iranian) calendar.
+     *
+     * @param  string  $datetime  The datetime string.
+     * @param ?string  $format  Optional. The conversion format. Default null (auto).
+     * @param ?string  $timezone  Optional. The conversion timezone. Default null (nothing).
+     * @return ?string
+     */
+    public static function toJalali($datetime, $format = null, $timezone = null)
+    {
+        if (!class_exists('IntlDateFormatter')) {
+            return null;
+        }
+
+        try {
+            $datetime_obj = new DateTime($datetime);
+
+            $format = $format ?: (static::detectFormat($datetime) ?? static::FORMAT);
+            $pattern = static::formatToPattern($format);
+
+            $formatter = new IntlDateFormatter(
+                "en_US@calendar=persian", // fa_IR@calendar=persian
+                IntlDateFormatter::FULL,
+                IntlDateFormatter::FULL,
+                $timezone,
+                IntlDateFormatter::TRADITIONAL,
+                $pattern,
+            );
+
+            return $formatter->format($datetime_obj) ?: null;
+        } catch (Throwable) {
+        }
+
+        return null;
+    }
+
+    /**
+     * An alias for {@see static::toJalali()}.
+     */
+    public static function toShamsi($datetime, $format = null, $timezone = null)
+    {
+        return self::toJalali($datetime, $format, $timezone);
     }
 
     /**
