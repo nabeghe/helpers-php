@@ -170,13 +170,13 @@ class Levex
     {
         if ($this->levelNamesHandler) {
             $handler = $this->levelNamesHandler;
-            $name = $handler($level);
+            $name = $handler($level, $this);
             if ($name !== null) {
                 return (string) $name;
             }
         }
 
-        if (self::checkGodLevel($level)) {
+        if ($this->checkGodLevel($level)) {
             return 'Creator';
         }
 
