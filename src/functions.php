@@ -1,6 +1,6 @@
 <?php namespace Nabeghe;
 
-if (!function_exists('arr_get')) {
+if (!function_exists('Nabeghe\arr_get')) {
     /**
      * @param  array  $array
      * @param $key
@@ -17,7 +17,7 @@ if (!function_exists('arr_get')) {
     }
 }
 
-if (!function_exists('arr_set')) {
+if (!function_exists('Nabeghe\arr_set')) {
     /**
      * @param  array  $array
      * @param $key
@@ -33,7 +33,7 @@ if (!function_exists('arr_set')) {
     }
 }
 
-if (!function_exists('arr_to_obj')) {
+if (!function_exists('Nabeghe\arr_to_obj')) {
     /**
      * @param  array  $array
      * @param  bool  $deep
@@ -49,7 +49,7 @@ if (!function_exists('arr_to_obj')) {
     }
 }
 
-if (!function_exists('calc_execution_metrics')) {
+if (!function_exists('Nabeghe\calc_execution_metrics')) {
     /**
      * @param $callback
      * @return array
@@ -71,7 +71,7 @@ if (!function_exists('calc_execution_metrics')) {
     }
 }
 
-if (!function_exists('calc_execution_time')) {
+if (!function_exists('Nabeghe\calc_execution_time')) {
     /**
      * @param $callback
      * @return mixed
@@ -85,7 +85,7 @@ if (!function_exists('calc_execution_time')) {
     }
 }
 
-if (!function_exists('calc_memory_usage')) {
+if (!function_exists('Nabeghe\calc_memory_usage')) {
     /**
      * @param $callback
      * @return int
@@ -99,7 +99,7 @@ if (!function_exists('calc_memory_usage')) {
     }
 }
 
-if (!function_exists('constant')) {
+if (!function_exists('Nabeghe\constant')) {
     /**
      * @param $name1
      * @param $name2
@@ -115,7 +115,7 @@ if (!function_exists('constant')) {
     }
 }
 
-if (!function_exists('define')) {
+if (!function_exists('Nabeghe\define')) {
     /**
      * @param $name
      * @param $value
@@ -132,7 +132,7 @@ if (!function_exists('define')) {
     }
 }
 
-if (!function_exists('defined')) {
+if (!function_exists('Nabeghe\defined')) {
     /**
      * @param $name1
      * @param $name2
@@ -148,7 +148,7 @@ if (!function_exists('defined')) {
     }
 }
 
-if (!function_exists('get_request_execution_time')) {
+if (!function_exists('Nabeghe\get_request_execution_time')) {
     /**
      * Get the time elapsed so far during this PHP script.
      * Uses REQUEST_TIME_FLOAT that appeared in PHP 5.4.0.
@@ -162,7 +162,7 @@ if (!function_exists('get_request_execution_time')) {
     }
 }
 
-if (!function_exists('join_paths')) {
+if (!function_exists('Nabeghe\join_paths')) {
     /**
      * Join the given paths together.
      *
@@ -184,7 +184,7 @@ if (!function_exists('join_paths')) {
     }
 }
 
-if (!function_exists('obj_get')) {
+if (!function_exists('Nabeghe\obj_get')) {
     /**
      * @param  object  $object
      * @param  string  $name
@@ -201,7 +201,7 @@ if (!function_exists('obj_get')) {
     }
 }
 
-if (!function_exists('obj_set')) {
+if (!function_exists('Nabeghe\obj_set')) {
     /**
      * @param  object  $object
      * @param  string  $name
@@ -217,7 +217,7 @@ if (!function_exists('obj_set')) {
     }
 }
 
-if (!function_exists('percent')) {
+if (!function_exists('Nabeghe\percent')) {
     /**
      * @param $value
      * @param $total
@@ -236,7 +236,7 @@ if (!function_exists('percent')) {
     }
 }
 
-if (!function_exists('sanitize_path')) {
+if (!function_exists('Nabeghe\sanitize_path')) {
     /**
      * @param $path
      * @param  int  $blankcount
@@ -276,7 +276,7 @@ if (!function_exists('sanitize_path')) {
     }
 }
 
-if (!function_exists('unpercent')) {
+if (!function_exists('Nabeghe\unpercent')) {
     /**
      * Calculates a percentage of a total value.<br>
      * What is N percent of a total value?
@@ -290,7 +290,7 @@ if (!function_exists('unpercent')) {
     }
 }
 
-if (!function_exists('zeroone')) {
+if (!function_exists('Nabeghe\zeroone')) {
     /**
      * @param $value
      * @return int
