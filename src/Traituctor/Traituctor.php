@@ -1,5 +1,7 @@
 <?php namespace Nabeghe\Traituctor;
 
+use Nabeghe\Reflecty\Reflecty;
+
 class Traituctor
 {
     /**
@@ -26,7 +28,7 @@ class Traituctor
             }
         }
 
-        $traits = class_uses($object);
+        $traits = Reflecty::classUsesRecursive($object);
         if (!$traits) {
             return false;
         }
