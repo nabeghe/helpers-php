@@ -39,7 +39,7 @@ trait NabegheArrTrait
             } else {
                 try {
                     $value = (array) $value;
-                } catch (\Throwable $throwable) {
+                } catch (\Throwable $e) {
                 }
             }
             if (!is_array($value)) {

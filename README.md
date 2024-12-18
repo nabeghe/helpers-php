@@ -4,7 +4,7 @@
 
 Includes the following helpers:
 - [Alphanum](https://github.com/nabeghe/alphanum-php) <small>v0.1.0</small>
-- [Arrayer](https://github.com/nabeghe/arrayer-php) <small>v1.0.1</small>
+- [Arrayer](https://github.com/nabeghe/arrayer-php) <small>v1.0.2</small>
 - [Buildify](https://github.com/nabeghe/buildify-php) <small>v1.0.1</small>
 - [Cally](https://github.com/nabeghe/cally-php) <small>v0.1.0</small>
 - [Colory](https://github.com/nabeghe/colory-php) <small>v0.1.0</small>
@@ -14,10 +14,10 @@ Includes the following helpers:
 - [Matcher](https://github.com/nabeghe/matcher-php)<small> v1.0.0</small>
 - [Mem](https://github.com/nabeghe/mem-php) <small>v1.0.0</small>
 - [Reflecty](https://github.com/nabeghe/reflecty-php) <small>v0.1.1</small>
-- [Servery](https://github.com/nabeghe/servery-php) <small>v0.1.0</small>
+- [Servery](https://github.com/nabeghe/servery-php) <small>v0.1.1</small>
 - [Shortnum](https://github.com/nabeghe/shortnum-php) <small>v0.1.0</small>
 - [SimpleCipher](https://github.com/nabeghe/simple-cipher-php) <small>v1.0.0</small>
-- [Stringer](https://github.com/nabeghe/stringer-php) <small>v1.1.1</small>
+- [Stringer](https://github.com/nabeghe/stringer-php) <small>v1.1.2</small>
 - [Tepade](https://github.com/nabeghe/tepade-php) <small>v1.0.0</small>
 - [Traituctor](https://github.com/nabeghe/traituctor) <small>v0.1.1</small>
 - [Yielder](https://github.com/nabeghe/yielder-php) <small>v1.0.0</small>

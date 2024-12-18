@@ -753,7 +753,7 @@ class Str
      * @param  bool  $emojible
      * @return int
      */
-    public static function len($value, $encoding = null, $emojible = true)
+    public static function len($value, $encoding = 'UTF-8', $emojible = true)
     {
         if ($emojible) {
             $value = preg_replace('/\p{M}/u', '', $value);
@@ -1608,8 +1608,12 @@ class Str
         if ($charlist === null) {
             $trimDefaultCharacters = " \n\r\t\v\0";
 
-            return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+|[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+$~u',
-                '', $value) ?? trim($value);
+            if (PHP_VERSION_ID >= 80200) {
+                return preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+|[\s\x{FEFF}\x{200B}\x{200E}'.$trimDefaultCharacters.']+$~u', '', $value) ?? trim($value);
+            } else {
+                $result = preg_replace('~^[\s\x{FEFF}\x{200B}\x{200E}' . preg_quote($trimDefaultCharacters, '~') . ']+|[\s\x{FEFF}\x{200B}\x{200E}' . preg_quote($trimDefaultCharacters, '~') . ']+$~u', '', $value);
+                return $result !== null ? $result : trim($value);
+            }
         }
 
         return trim($value, $charlist);

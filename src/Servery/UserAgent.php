@@ -7,6 +7,8 @@ class UserAgent
 {
     protected static ?UserAgent $instance = null;
 
+    protected ?string $value = null;
+
     /**
      * @var string
      */
@@ -82,14 +84,19 @@ class UserAgent
     /**
      * @param  string|null  $value
      */
-    public function __construct(protected ?string $value = null)
+    public function __construct(?string $value = null)
     {
         if (func_num_args() === 0) {
-            $this->value = static::getCurrent();
+            $value = static::getCurrent();
         }
+
+        $this->value = $value;
     }
 
-    public static function instance(): static
+    /**
+     * @return static|null
+     */
+    public static function instance()
     {
         if (!isset(static::$instance)) {
             static::$instance = new static();
