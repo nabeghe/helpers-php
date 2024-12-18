@@ -161,7 +161,7 @@ class Dati
             $diff = $dt1->diff($dt2);
             $details = array_intersect_key((array) $diff, array_flip(['y', 'm', 'd', 'h', 'i', 's']));
             return $details;
-        } catch (Throwable $throwable) {
+        } catch (Throwable $e) {
         }
 
         return null;
@@ -221,7 +221,7 @@ class Dati
             $shamsi_timestamp = $formatter->parse($datetime);
             $formatter->setCalendar(IntlDateFormatter::GREGORIAN);
             return $formatter->format($shamsi_timestamp) ?: null;
-        } catch (Throwable) {
+        } catch (Throwable $throwable) {
         }
 
         return null;
@@ -433,7 +433,7 @@ class Dati
             );
 
             return $formatter->format($datetime_obj) ?: null;
-        } catch (Throwable) {
+        } catch (Throwable $e) {
         }
 
         return null;

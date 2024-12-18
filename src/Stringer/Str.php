@@ -1,6 +1,7 @@
 <?php namespace Nabeghe\Stringer;
 
 use JsonException;
+use Throwable;
 
 /**
  * String utils.
@@ -175,7 +176,7 @@ class Str
                 return $value;
             }
             return (string) $value;
-        } catch (\Throwable) {
+        } catch (Throwable $e) {
             if (is_object($value)) {
                 return self::fromEnum($value);
             }
@@ -194,7 +195,7 @@ class Str
     {
         try {
             return self::cast($value, $default);
-        } catch (\Throwable) {
+        } catch (Throwable $e) {
             return $default;
         }
     }
@@ -533,7 +534,7 @@ class Str
                     }
                 }
                 return (string) $enum->value;
-            } catch (\Throwable) {
+            } catch (Throwable $e) {
             }
         }
         return $default;
@@ -670,7 +671,7 @@ class Str
 
         try {
             $decoded = json_decode($value, true, 512, JSON_THROW_ON_ERROR);
-        } catch (JsonException) {
+        } catch (JsonException $e) {
             return false;
         }
 
@@ -1400,7 +1401,7 @@ class Str
         for ($i = 0; $i < $length; $i++) {
             try {
                 $output .= $chars[random_int(0, $max - 1)];
-            } catch (\Throwable) {
+            } catch (Throwable $e) {
             }
         }
         return $output;
