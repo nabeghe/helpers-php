@@ -12,7 +12,7 @@ Includes the following helpers:
 - [HeadersReader](https://github.com/nabeghe/headers-reader-php) <small>v1.0.1</small>
 - [Levex](https://github.com/nabeghe/levex-php) <small>v1.0.1</small>
 - [Matcher](https://github.com/nabeghe/matcher-php)<small> v1.0.0</small>
-- [Mem](https://github.com/nabeghe/mem-php) <small>v1.0.0</small>
+- [Mem](https://github.com/nabeghe/mem-php) <small>v1.1.0</small>
 - [Reflecty](https://github.com/nabeghe/reflecty-php) <small>v0.2.0</small>
 - [Servery](https://github.com/nabeghe/servery-php) <small>v0.1.1</small>
 - [Shortnum](https://github.com/nabeghe/shortnum-php) <small>v0.1.0</small>
