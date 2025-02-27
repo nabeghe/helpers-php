@@ -1456,31 +1456,27 @@ class Str
      */
     public static function sub($string, $start, $length = null, $encoding = 'UTF-8')
     {
-        preg_match_all('/./u', $string, $matches);
+        preg_match_all('/./us', $string, $matches);
         $chars = $matches[0];
         $filteredChars = [];
+
         foreach ($chars as $char) {
             if (preg_match('/\p{M}/u', $char) && !empty($filteredChars)) {
+                // Add diacritic combinations to the previous character.
                 $filteredChars[count($filteredChars) - 1] .= $char;
             } else {
-                $filteredChars[] = $char;
+                // Ensuring that spaces and new lines are not removed.
+                if (!preg_match('/\s/u', $char) || $char === " " || $char === "\n" || $char === "\r" || $char === "\t") {
+                    $filteredChars[] = $char;
+                }
             }
         }
+
         if (is_null($length)) {
             $length = count($filteredChars) - $start;
         }
-        return implode('', array_slice($filteredChars, $start, $length));
 
-        //return mb_substr($string, $start, $length, $encoding);
-        //return mb_convert_encoding(
-        //    substr(
-        //        mb_convert_encoding($string, 'UTF-16'),
-        //        $start << 1,
-        //        $length === null ? null : ($length << 1),
-        //    ),
-        //    'UTF-8',
-        //    'UTF-16',
-        //);
+        return implode('', array_slice($filteredChars, $start, $length));
     }
 
     /**
