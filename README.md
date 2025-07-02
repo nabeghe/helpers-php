@@ -4,7 +4,7 @@
 
 Includes the following helpers:
 - [Alphanum](https://github.com/nabeghe/alphanum-php) <small>v0.1.0</small>
-- [Arrayer](https://github.com/nabeghe/arrayer-php) <small>v1.0.2</small>
+- [Arrayer](https://github.com/nabeghe/arrayer-php) <small>v1.0.4</small>
 - [Buildify](https://github.com/nabeghe/buildify-php) <small>v1.0.1</small>
 - [Cally](https://github.com/nabeghe/cally-php) <small>v0.1.0</small>
 - [Colory](https://github.com/nabeghe/colory-php) <small>v0.1.0</small>
@@ -38,7 +38,5 @@ composer require nabeghe/helpers
 <hr>
 
 ## 📖 License
-
-Copyright (c) Hadi Akbarzadeh
 
 Licensed under the MIT license, see [LICENSE.md](LICENSE.md) for details.

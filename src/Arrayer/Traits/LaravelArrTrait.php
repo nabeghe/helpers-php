@@ -389,6 +389,31 @@ trait LaravelArrTrait
         return true;
     }
 
+
+    /**
+     * Determine if all keys exist in an array using "dot" notation.
+     *
+     * @param  \ArrayAccess|array  $array
+     * @param  string|array  $keys
+     * @return bool
+     */
+    public static function hasAll($array, $keys)
+    {
+        $keys = (array) $keys;
+
+        if (!$array || $keys === []) {
+            return false;
+        }
+
+        foreach ($keys as $key) {
+            if (!static::has($array, $key)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Determine if any of the keys exist in an array using "dot" notation.
      *
@@ -540,41 +565,41 @@ trait LaravelArrTrait
         });
     }
 
-//    /**
-//     * Pluck an array of values from an array.
-//     *
-//     * @param  iterable  $array
-//     * @param  string|array|int|null  $value
-//     * @param  string|array|null  $key
-//     * @return array
-//     */
-//    public static function pluck($array, $value, $key = null)
-//    {
-//        $results = [];
-//
-//        [$value, $key] = static::explodePluckParameters($value, $key);
-//
-//        foreach ($array as $item) {
-//            $itemValue = Misc::dataGet($item, $value);
-//
-//            // If the key is "null", we will just append the value to the array and keep
-//            // looping. Otherwise we will key the array using the value of the key we
-//            // received from the developer. Then we'll return the final array form.
-//            if (is_null($key)) {
-//                $results[] = $itemValue;
-//            } else {
-//                $itemKey = Misc::dataGet($item, $key);
-//
-//                if (is_object($itemKey) && method_exists($itemKey, '__toString')) {
-//                    $itemKey = (string) $itemKey;
-//                }
-//
-//                $results[$itemKey] = $itemValue;
-//            }
-//        }
-//
-//        return $results;
-//    }
+    //    /**
+    //     * Pluck an array of values from an array.
+    //     *
+    //     * @param  iterable  $array
+    //     * @param  string|array|int|null  $value
+    //     * @param  string|array|null  $key
+    //     * @return array
+    //     */
+    //    public static function pluck($array, $value, $key = null)
+    //    {
+    //        $results = [];
+    //
+    //        [$value, $key] = static::explodePluckParameters($value, $key);
+    //
+    //        foreach ($array as $item) {
+    //            $itemValue = Misc::dataGet($item, $value);
+    //
+    //            // If the key is "null", we will just append the value to the array and keep
+    //            // looping. Otherwise we will key the array using the value of the key we
+    //            // received from the developer. Then we'll return the final array form.
+    //            if (is_null($key)) {
+    //                $results[] = $itemValue;
+    //            } else {
+    //                $itemKey = Misc::dataGet($item, $key);
+    //
+    //                if (is_object($itemKey) && method_exists($itemKey, '__toString')) {
+    //                    $itemKey = (string) $itemKey;
+    //                }
+    //
+    //                $results[$itemKey] = $itemValue;
+    //            }
+    //        }
+    //
+    //        return $results;
+    //    }
 
     /**
      * Explode the "value" and "key" arguments passed to "pluck".

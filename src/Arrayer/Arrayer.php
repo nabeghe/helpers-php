@@ -21,6 +21,7 @@
  * @method self flatten(int $depth = INF)
  * @method mixed get(string|int|null $key, mixed $default = null)
  * @method bool has(string|array $keys)
+ * @method bool hasAll(\ArrayAccess|array $array, string|array $keys)
  * @method bool hasAny(string|array $keys)
  * @method bool isAssoc()
  * @method bool isList()

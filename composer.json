@@ -7,6 +7,14 @@
   "type": "library",
   "homepage": "https://github.com/nabeghe/helpers-php",
   "license": "MIT",
+  "authors": [
+    {
+      "name": "Hadi Akbarzadeh",
+      "email": "elsiomcoder@gmail.com",
+      "homepage": "https://elatel.ir",
+      "role": "Developer"
+    }
+  ],
   "autoload": {
     "files": [
       "src/functions.php"
@@ -32,14 +40,6 @@
       "Nabeghe\\Yielder\\": "src/Yielder"
     }
   },
-  "authors": [
-    {
-      "name": "Hadi Akbarzadeh",
-      "email": "hadicoder@gmail.com",
-      "homepage": "https://elatel.ir",
-      "role": "Developer"
-    }
-  ],
   "require": {
     "php": ">=7.4",
     "ext-json": "*",
