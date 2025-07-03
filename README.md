@@ -1,4 +1,4 @@
-# Helpers for PHP.
+# Helpers for PHP ≥ 7.4
 
 > A helper library that includes all my helpers in one package for PHP.
 
@@ -15,7 +15,7 @@ Includes the following helpers:
 - [Mem](https://github.com/nabeghe/mem-php) <small>v1.2.0</small>
 - [Reflecty](https://github.com/nabeghe/reflecty-php) <small>v0.3.0</small>
 - [Servery](https://github.com/nabeghe/servery-php) <small>v0.1.1</small>
-- [Shortnum](https://github.com/nabeghe/shortnum-php) <small>v0.1.0</small>
+- [Shortnum](https://github.com/nabeghe/shortnum-php) <small>v1.0.0</small>
 - [SimpleCipher](https://github.com/nabeghe/simple-cipher-php) <small>v1.0.0</small>
 - [Stringer](https://github.com/nabeghe/stringer-php) <small>v1.1.3</small>
 - [Tepade](https://github.com/nabeghe/tepade-php) <small>v1.0.0</small>

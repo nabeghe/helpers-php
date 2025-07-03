@@ -8,7 +8,7 @@ class Shortnum
     /**
      * Supported units.
      */
-    public const UNITS = [
+    const UNITS = [
         '', 'K', 'M', 'B', 'T', 'Qa', 'Qi', 'Sx', 'Sp', 'Oc', 'No', 'Dc', 'Ud', 'Dd', 'Td', 'Qa', 'Qi', 'Sx', 'Sp',
         'Oc', 'No',
     ];
