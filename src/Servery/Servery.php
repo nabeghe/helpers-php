@@ -14,40 +14,45 @@ class Servery
      */
     public static function isLocalHost(): bool
     {
+        static $result;
+        if (isset($result)) {
+            return $result;
+        }
+
         $remote_addr = $_SERVER['REMOTE_ADDR'] ?? null;
 
         if (empty($remote_addr) || in_array($remote_addr, static::LOCAL_HOSTS, true)) {
-            return true;
+            return $result = true;
         }
 
         $server_name = $_SERVER['SERVER_NAME'] ?? '';
         $http_host = $_SERVER['HTTP_HOST'] ?? '';
 
         if (in_array(strtolower($server_name), static::LOCAL_HOSTS, true) || in_array(strtolower($http_host), static::LOCAL_HOSTS, true)) {
-            return true;
+            return $result = true;
         }
 
         if (filter_var($remote_addr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
             $parts = explode('.', $remote_addr);
 
             if ($parts[0] === '10') {
-                return true;
+                return $result = true;
             }
 
             if ($parts[0] === '172' && $parts[1] >= 16 && $parts[1] <= 31) {
-                return true;
+                return $result = true;
             }
 
             if ($parts[0] === '192' && $parts[1] === '168') {
-                return true;
+                return $result = true;
             }
         }
 
         if (strpos($remote_addr, '::1') === 0) {
-            return true;
+            return $result = true;
         }
 
-        return false;
+        return $result = false;
     }
 
     /**
