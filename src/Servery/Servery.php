@@ -2,9 +2,64 @@
 
 class Servery
 {
+    /**
+     * Localhost names and IPs.
+     */
+    const LOCAL_HOSTS = ['localhost', '127.0.0.1', '::1'];
+
+    /**
+     * Checks if the current environment is running locally.
+     *
+     * @return bool
+     */
+    public static function isLocalHost(): bool
+    {
+        $remote_addr = $_SERVER['REMOTE_ADDR'] ?? null;
+
+        if (empty($remote_addr) || in_array($remote_addr, static::LOCAL_HOSTS, true)) {
+            return true;
+        }
+
+        $server_name = $_SERVER['SERVER_NAME'] ?? '';
+        $http_host = $_SERVER['HTTP_HOST'] ?? '';
+
+        if (in_array(strtolower($server_name), static::LOCAL_HOSTS, true) || in_array(strtolower($http_host), static::LOCAL_HOSTS, true)) {
+            return true;
+        }
+
+        if (filter_var($remote_addr, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4)) {
+            $parts = explode('.', $remote_addr);
+
+            if ($parts[0] === '10') {
+                return true;
+            }
+
+            if ($parts[0] === '172' && $parts[1] >= 16 && $parts[1] <= 31) {
+                return true;
+            }
+
+            if ($parts[0] === '192' && $parts[1] === '168') {
+                return true;
+            }
+        }
+
+        if (strpos($remote_addr, '::1') === 0) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string
+     */
     public static function getWebServer(): string
     {
-        return $_SERVER['SERVER_NAME'] ?? '';
+        if (!empty($_SERVER['SERVER_NAME']) && is_string($_SERVER['SERVER_NAME'])) {
+            return $_SERVER['SERVER_NAME'];
+        }
+
+        return 'localhost';
     }
 
     /**
@@ -149,8 +204,7 @@ class Servery
      */
     public static function isHttps(): bool
     {
-        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'
-            || $_SERVER['SERVER_PORT'] == 443);
+        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);
     }
 
     /**
@@ -163,6 +217,7 @@ class Servery
         if (static::isHttps()) {
             return 'https';
         }
+
         return 'http';
     }
 
@@ -174,9 +229,11 @@ class Servery
     public static function getServerProtocol(): string
     {
         $protocol = $_SERVER['SERVER_PROTOCOL'] ?? '';
+
         if (!in_array($protocol, ['HTTP/1.1', 'HTTP/2', 'HTTP/2.0', 'HTTP/3'], true)) {
             $protocol = 'HTTP/1.0';
         }
+
         return $protocol;
     }
 
@@ -233,8 +290,10 @@ class Servery
             $path = $_SERVER['SCRIPT_FILENAME'];
             $path = dirname($path);
             $path = rtrim($path, '/');
+
             return $path;
         }
+
         return null;
     }
 
@@ -246,9 +305,11 @@ class Servery
     public static function getHomePath(): string
     {
         $path = static::getRequrestedPath();
+
         if ($path === null) {
             $path = __DIR__.'/../../../..'; // from vendor/nabeghe/servery/src
         }
+
         return $path;
     }
 
@@ -260,18 +321,31 @@ class Servery
     public static function getHomeUrl(): ?string
     {
         $path = static::getRequrestedPath();
+
         if ($path === null) {
             return null;
         }
+
         $home_url = static::getRootUrl().($path ? "/$path" : '');
+
         return $home_url;
     }
 
+    /**
+     * An alias for {@see UserAgent::$instance()}.
+     *
+     * @return UserAgent
+     */
     public static function getUserAgent(): UserAgent
     {
         return UserAgent::instance();
     }
 
+    /**
+     * An alias for {@see UserAgent::getCurrentReal()}.
+     *
+     * @return string
+     */
     public static function getUserAgentValue(): string
     {
         return UserAgent::getCurrentReal();
