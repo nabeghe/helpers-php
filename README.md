@@ -13,7 +13,7 @@ Includes the following helpers:
 - [Levex](https://github.com/nabeghe/levex-php) <small>v1.0.1</small>
 - [Matcher](https://github.com/nabeghe/matcher-php)<small> v1.0.0</small>
 - [Mem](https://github.com/nabeghe/mem-php) <small>v1.2.0</small>
-- [Reflecty](https://github.com/nabeghe/reflecty-php) <small>v0.4.0</small>
+- [Reflecty](https://github.com/nabeghe/reflecty-php) <small>v0.5.0</small>
 - [Servery](https://github.com/nabeghe/servery-php) <small>v0.2.1</small>
 - [Shortnum](https://github.com/nabeghe/shortnum-php) <small>v1.0.0</small>
 - [SimpleCipher](https://github.com/nabeghe/simple-cipher-php) <small>v1.0.0</small>
