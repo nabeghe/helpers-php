@@ -9,6 +9,7 @@ Includes the following helpers:
 - [Cally](https://github.com/nabeghe/cally-php) <small>v0.1.0</small>
 - [Colory](https://github.com/nabeghe/colory-php) <small>v0.1.0</small>
 - [Dati](https://github.com/nabeghe/dati-php) <small>v0.3.1</small>
+- [FileSize](https://github.com/nabeghe/file-size-php) <small>v1.0.0</small>
 - [HeadersReader](https://github.com/nabeghe/headers-reader-php) <small>v1.0.1</small>
 - [Levex](https://github.com/nabeghe/levex-php) <small>v1.0.1</small>
 - [Matcher](https://github.com/nabeghe/matcher-php)<small> v1.0.0</small>

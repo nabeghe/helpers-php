@@ -26,6 +26,7 @@
       "Nabeghe\\Cally\\": "src/Cally",
       "Nabeghe\\Colory\\": "src/Colory",
       "Nabeghe\\Dati\\": "src/Dati",
+      "Nabeghe\\FileSize\\": "src/FileSize",
       "Nabeghe\\HeadersReader\\": "src/HeadersReader",
       "Nabeghe\\Levex\\": "src/Levex",
       "Nabeghe\\Matcher\\": "src/Matcher",
