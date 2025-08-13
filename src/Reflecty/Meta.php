@@ -27,6 +27,7 @@ class Meta implements \ArrayAccess, \JsonSerializable
         return isset($this->_[$offset]);
     }
 
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         return $this->_[$offset] ?? null;
