@@ -2,6 +2,7 @@
 
 use DateTime;
 use DateTimeZone;
+use IntlTimeZone;
 use Throwable;
 use IntlDateFormatter;
 
@@ -478,5 +479,39 @@ class Dati
     public static function toLocal($datetime, $format = null)
     {
         return static::toTimeZone($datetime, 'GMT', date_default_timezone_get(), $format);
+    }
+
+    /**
+     * Returns a human-readable display name for a timezone in the given locale.
+     *
+     * @param  string  $locale  Locale for formatting (e.g., 'en_US', 'en', 'fa_IR', 'fa')
+     * @param  string|null  $timezone  Optional timezone ID (e.g., 'Asia/Tehran'). Defaults to system timezone.
+     * @return string|null Display name of the timezone, or null on error.
+     */
+    public static function getTimeZoneDisplayName(string $locale = 'en', ?string $timezone = null): ?string
+    {
+        $timezone ??= date_default_timezone_get();
+
+        if (class_exists('IntlDateFormatter')) {
+            try {
+                $formatter = new IntlDateFormatter(
+                    $locale,
+                    IntlDateFormatter::FULL,
+                    IntlDateFormatter::FULL,
+                    $timezone,
+                    null,
+                );
+
+                $date_time_zone = new DateTimeZone($timezone);
+
+                $display_name = $formatter->getTimeZone()->getDisplayName(false, IntlTimeZone::DISPLAY_LONG, $locale);
+                if ($display_name !== false) {
+                    return $display_name;
+                }
+            } catch (Throwable $e) {
+            }
+        }
+
+        return null;
     }
 }
