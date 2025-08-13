@@ -209,7 +209,11 @@ class Servery
      */
     public static function isHttps(): bool
     {
-        return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443);
+        return (
+            (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ||
+            ($_SERVER['SERVER_PORT'] ?? null) == 443 ||
+            ($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? null) === 'https'
+        );
     }
 
     /**
