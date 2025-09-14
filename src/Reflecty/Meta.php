@@ -127,7 +127,7 @@ class Meta implements \ArrayAccess, \JsonSerializable
     public function merge(array $_, bool $deep = false, bool $overwrite = true)
     {
         if ($deep) {
-            $this->_ = static::deepMege($this->_, $_, $overwrite);
+            $this->_ = static::deepMerge($this->_, $_, $overwrite);
         } else {
             if ($overwrite) {
                 $this->_ = array_merge($this->_, $_);
@@ -149,18 +149,22 @@ class Meta implements \ArrayAccess, \JsonSerializable
      * @param bool $overwrite Optional. Whether to overwrite existing keys in $a with values from $b. Default true.
      * @return array The merged array.
      */
-    protected static function deepMege(array &$a, array &$b, bool $overwrite = true): array
+    protected static function deepMerge(array $a, array $b, bool $overwrite = true): array
     {
-        $merged = $a;
+        foreach ($b as $key => $value) {
+            if (is_array($value) && isset($a[$key]) && is_array($a[$key])) {
+                if (array_keys($a[$key]) !== range(0, count($a[$key]) - 1) ||
+                    array_keys($value) !== range(0, count($value) - 1)) {
+                    $a[$key] = static::deepMerge($a[$key], $value, $overwrite);
+                    continue;
+                }
+            }
 
-        foreach ($b as $key => &$value) {
-            if (is_array($value) && isset($merged[$key]) && is_array($merged[$key])) {
-                $merged[$key] = static::deepMege($merged[$key], $value);
-            } elseif ($overwrite || !isset($merged[$key])) {
-                $merged[$key] = $value;
+            if ($overwrite || !isset($a[$key])) {
+                $a[$key] = $value;
             }
         }
 
-        return $merged;
+        return $a;
     }
 }
