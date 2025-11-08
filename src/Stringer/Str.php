@@ -748,6 +748,7 @@ class Str
 
     /**
      * Return the length of the given string.
+     *
      * @param  string  $value
      * @param  string|null  $encoding
      * @param  bool  $emojible
@@ -755,10 +756,16 @@ class Str
      */
     public static function len($value, $encoding = 'UTF-8', $emojible = true)
     {
-        if ($emojible) {
+        if ($value == '') {
+            return 0;
+        }
+
+        if ($emojible && $value) {
             $value = preg_replace('/\p{M}/u', '', $value);
         }
+
         return mb_strlen($value, $encoding);
+
         //$length = 0;
         //$valuelength = \strlen($value);
         //for ($x = 0; $x < $valuelength; $x++) {
