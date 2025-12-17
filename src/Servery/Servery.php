@@ -56,6 +56,36 @@ class Servery
     }
 
     /**
+     * Check if the current execution is in a terminal environment.
+     *
+     * @return bool
+     */
+    public static function isTerminal(): bool
+    {
+        return in_array(PHP_SAPI, ['cli', 'phpdbg'], true);
+    }
+
+    /**
+     * Determine if the current execution is handling an HTTP request.
+     *
+     * @return bool
+     */
+    public static function isRequest(): bool
+    {
+        return !static::isTerminal() && isset($_SERVER['REQUEST_METHOD']) && PHP_SAPI !== 'embed';
+    }
+
+    /**
+     * Check if the current HTTP request may contain a body.
+     *
+     * @return bool
+     */
+    public static function hasRequestBody(): bool
+    {
+        return static::isRequest() && in_array(strtoupper($_SERVER['REQUEST_METHOD']), ['POST', 'PUT', 'PATCH'], true);
+    }
+
+    /**
      * @return string
      */
     public static function getWebServer(): string
@@ -286,7 +316,6 @@ class Servery
     {
         return static::getCurrentUrl();
     }
-
 
     /**
      * Returns the requested path, using `$_SERVER['SCRIPT_FILENAME']`.
