@@ -31,6 +31,7 @@
       "Nabeghe\\Levex\\": "src/Levex",
       "Nabeghe\\Matcher\\": "src/Matcher",
       "Nabeghe\\Mem\\": "src/Mem",
+      "Nabeghe\\ProcessFinger\\": "src/ProcessFinger",
       "Nabeghe\\Reflecty\\": "src/Reflecty",
       "Nabeghe\\Servery\\": "src/Servery",
       "Nabeghe\\Shortnum\\": "src/Shortnum",
