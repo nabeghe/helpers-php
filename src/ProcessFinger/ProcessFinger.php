@@ -63,35 +63,42 @@ final class ProcessFinger
             }
         }
 
-        if (!function_exists('shell_exec') || (ini_get('disable_functions') && strpos(ini_get('disable_functions'), 'shell_exec') !== false)) {
+        if (
+            !function_exists('shell_exec') ||
+            (ini_get('disable_functions') && strpos(ini_get('disable_functions'), 'shell_exec') !== false)
+        ) {
             return null;
         }
 
         $os = strtoupper(substr(PHP_OS, 0, 3));
 
         if ($os === 'LIN') {
-            $cmdline_path = "/proc/$pid/cmdline";
+            $cmdlinePath = "/proc/$pid/cmdline";
+            if (!is_readable($cmdlinePath)) {
+                return null;
+            }
 
-            if (file_exists($cmdline_path)) {
-                $cmdline_content = file_get_contents($cmdline_path);
+            $args = array_values(array_filter(explode("\0", file_get_contents($cmdlinePath))));
 
-                $args = explode("\0", $cmdline_content);
-                $args = array_filter($args);
+            foreach ($args as $arg) {
+                if ($arg[0] === '-') {
+                    continue;
+                }
 
-                if (isset($args[1])) {
-                    $script_path = $args[1];
+                if (substr($arg, -4) !== '.php') {
+                    continue;
+                }
 
-                    if (realpath($script_path) !== false) {
-                        return realpath($script_path);
+                if (is_file($arg)) {
+                    return realpath($arg);
+                }
+
+                $cwdPath = "/proc/$pid/cwd";
+                if (is_link($cwdPath)) {
+                    $cwd = readlink($cwdPath);
+                    if ($cwd && is_file($cwd . '/' . $arg)) {
+                        return realpath($cwd . '/' . $arg);
                     }
-
-                    $cwd_path = "/proc/$pid/cwd";
-                    if (is_link($cwd_path) && $cwd = readlink($cwd_path)) {
-                        $resolved_path = realpath($cwd.'/'.$script_path);
-                        return $resolved_path ?: $script_path;
-                    }
-
-                    return $script_path;
                 }
             }
 
@@ -99,53 +106,57 @@ final class ProcessFinger
         }
 
         if ($os === 'WIN') {
-            $command = "powershell -NoProfile -Command \"(Get-CimInstance -ClassName Win32_Process -Filter \"ProcessId='$pid'\").CommandLine\" 2>&1";
+            $command = "powershell -NoProfile -Command \"(Get-CimInstance Win32_Process -Filter \\\"ProcessId='$pid'\\\").CommandLine\" 2>&1";
+            $output = trim((string) shell_exec($command));
 
-            $output = shell_exec($command);
+            if ($output === '') {
+                return null;
+            }
 
-            if (!empty($output)) {
-                $full_command_line = trim($output);
+            preg_match_all('/"([^"]+)"|(\S+)/', $output, $matches);
+            $args = array_values(array_filter(array_merge($matches[1], $matches[2])));
 
-                if (preg_match('/^"(.+?)"\s*"(.+?)"/', $full_command_line, $script_matches)) {
-                    $script_path = $script_matches[2];
-                    return $script_path;
-                } else {
-                    $parts = explode(' ', $full_command_line, 3);
-                    if (isset($parts[1])) {
-                        $script_path = trim($parts[1], '"');
-                        return $script_path;
-                    }
+            foreach ($args as $arg) {
+                if ($arg[0] === '-') {
+                    continue;
+                }
+
+                if (substr($arg, -4) !== '.php') {
+                    continue;
+                }
+
+                if (is_file($arg)) {
+                    return realpath($arg);
                 }
             }
 
             return null;
-
         }
 
         if (PHP_OS_FAMILY === 'Darwin') {
-            if (!function_exists('shell_exec')) {
+            $commandLine = trim((string) shell_exec("ps -p $pid -o command= 2>/dev/null"));
+            if ($commandLine === '') {
                 return null;
             }
 
-            $commandLine = trim(shell_exec("ps -p $pid -o command= 2>/dev/null"));
+            preg_match_all('/"([^"]+)"|\'([^\']+)\'|(\S+)/', $commandLine, $matches);
+            $args = array_values(array_filter(array_merge($matches[1], $matches[2], $matches[3])));
 
-            if ($commandLine !== '') {
-                preg_match_all('/"([^"]+)"|\'([^\']+)\'|(\S+)/', $commandLine, $matches);
-                $args = array_filter(array_merge($matches[1], $matches[2], $matches[3]));
+            foreach ($args as $arg) {
+                if ($arg[0] === '-') {
+                    continue;
+                }
 
-                if (isset($args[1])) {
-                    $script = $args[1];
+                if (substr($arg, -4) !== '.php') {
+                    continue;
+                }
 
-                    if (realpath($script)) {
-                        return realpath($script);
-                    }
-
-                    return $script;
+                if (is_file($arg)) {
+                    return realpath($arg);
                 }
             }
 
-            $binaryPath = trim(shell_exec("proc_pidpath $pid 2>/dev/null"));
-            return $binaryPath !== '' ? $binaryPath : null;
+            return null;
         }
 
         return null;
