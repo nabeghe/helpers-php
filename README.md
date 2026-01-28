@@ -14,7 +14,7 @@ Includes the following helpers:
 - [Levex](https://github.com/nabeghe/levex-php) <small>v1.0.1</small>
 - [Matcher](https://github.com/nabeghe/matcher-php)<small> v1.0.0</small>
 - [Mem](https://github.com/nabeghe/mem-php) <small>v1.2.0</small>
-- [ProcessFinger](https://github.com/nabeghe/process-finger-php) <small>v0.1.1</small>
+- [ProcessFinger](https://github.com/nabeghe/process-finger-php) <small>v0.1.2</small>
 - [Reflecty](https://github.com/nabeghe/reflecty-php) <small>v0.5.2</small>
 - [Servery](https://github.com/nabeghe/servery-php) <small>v0.3.0</small>
 - [Shortnum](https://github.com/nabeghe/shortnum-php) <small>v1.0.0</small>

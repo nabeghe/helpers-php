@@ -106,27 +106,40 @@ final class ProcessFinger
         }
 
         if ($os === 'WIN') {
-            $command = "powershell -NoProfile -Command \"(Get-CimInstance Win32_Process -Filter \\\"ProcessId='$pid'\\\").CommandLine\" 2>&1";
-            $output = trim((string) shell_exec($command));
+            $command = 'powershell -NoProfile -Command '
+                . '"(Get-CimInstance Win32_Process -Filter \"ProcessId=' . $pid . '\").CommandLine" 2>&1';
 
-            if ($output === '') {
+            $commandLine = trim((string) shell_exec($command));
+            if ($commandLine === '') {
                 return null;
             }
 
-            preg_match_all('/"([^"]+)"|(\S+)/', $output, $matches);
-            $args = array_values(array_filter(array_merge($matches[1], $matches[2])));
+            // Parse Windows command line (handles quotes properly)
+            preg_match_all('/"([^"]+)"|(\S+)/u', $commandLine, $m);
+            $args = array_values(array_filter(array_merge($m[1], $m[2])));
+
+            // Remove php.exe
+            array_shift($args);
+
+            // Get process working directory
+            $cwd = trim((string) shell_exec(
+                'powershell -NoProfile -Command '
+                . '"(Get-CimInstance Win32_Process -Filter \"ProcessId=' . $pid . '\").WorkingDirectory"'
+            ));
 
             foreach ($args as $arg) {
-                if ($arg[0] === '-') {
+                if ($arg === '' || $arg[0] === '-') {
                     continue;
                 }
 
-                if (substr($arg, -4) !== '.php') {
-                    continue;
-                }
-
+                // Direct path
                 if (is_file($arg)) {
                     return realpath($arg);
+                }
+
+                /// Relative path
+                if ($cwd && is_file($cwd . DIRECTORY_SEPARATOR . $arg)) {
+                    return realpath($cwd . DIRECTORY_SEPARATOR . $arg);
                 }
             }
 
