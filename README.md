@@ -21,6 +21,7 @@ Includes the following helpers:
 - [SimpleCipher](https://github.com/nabeghe/simple-cipher-php) <small>v1.0.0</small>
 - [Stringer](https://github.com/nabeghe/stringer-php) <small>v1.1.4</small>
 - [Tepade](https://github.com/nabeghe/tepade-php) <small>v1.0.0</small>
+- [TextBinder](https://github.com/nabeghe/text-binder-php) <small>v1.0.0</small>
 - [Traituctor](https://github.com/nabeghe/traituctor) <small>v0.1.1</small>
 - [Yielder](https://github.com/nabeghe/yielder-php) <small>v1.0.0</small>
 

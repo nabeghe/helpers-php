@@ -38,6 +38,7 @@
       "Nabeghe\\SimpleCipher\\": "src/SimpleCipher",
       "Nabeghe\\Stringer\\": "src/Stringer",
       "Nabeghe\\Tepade\\": "src/Tepade",
+      "Nabeghe\\TextBinder\\": "src/TextBinder",
       "Nabeghe\\Traituctor\\": "src/Traituctor",
       "Nabeghe\\Yielder\\": "src/Yielder"
     }
