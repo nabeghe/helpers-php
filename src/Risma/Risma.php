@@ -6,7 +6,7 @@ use Throwable;
 /**
  * Risma
  *  A lightweight and flexible string processing engine for PHP.
- *  eveloped by https://github.com/nabeghe.
+ *  developed by [https://github.com/nabeghe](https://github.com/nabeghe).
  */
 class Risma
 {
@@ -19,6 +19,16 @@ class Risma
      * @var array Registered classes for method resolution.
      */
     protected array $classes = [];
+
+    /**
+     * @var int Maximum recursion depth to prevent infinite loops.
+     */
+    protected int $maxDepth = 10;
+
+    /**
+     * @var int Current recursion depth tracker.
+     */
+    protected int $currentDepth = 0;
 
     public function __construct()
     {
@@ -37,11 +47,19 @@ class Risma
         $this->funcs['ok'] ??= function ($value) {
             return $value ? '1' : '0';
         };
+
+        $this->funcs['prepend'] ??= function ($input, $prefix) {
+            return $prefix.$input;
+        };
+
+        $this->funcs['append'] ??= function ($input, $suffix) {
+            return $input.$suffix;
+        };
     }
 
     /**
      * Register a custom function.
-     * * @param  string  $name  The name used in the template.
+     * @param  string  $name  The name used in the template.
      * @param  callable  $callback  The logic to execute.
      */
     public function addFunc(string $name, callable $callback): void
@@ -51,7 +69,7 @@ class Risma
 
     /**
      * Register a class to expose its methods to the engine.
-     * * @param  string  $className  Full namespace of the class.
+     * @param  string  $className  Full namespace of the class.
      */
     public function addClass(string $className): void
     {
@@ -62,7 +80,8 @@ class Risma
 
     /**
      * Renders the template string by replacing placeholders.
-     * * @param  string  $text  The raw string with placeholders like {var.func}.
+     * Uses recursive regex to match nested braces correctly.
+     * @param  string  $text  The raw string with placeholders like {var.func}.
      * @param  array  $vars  Key-value pairs of data.
      * @param  bool  $default  If true, returns empty string for missing variables.
      * @return string The processed text.
@@ -70,7 +89,12 @@ class Risma
      */
     public function render(string $text, array $vars, bool $default = true): string
     {
-        $pattern = '/(!?)\{\s*(.*?)\s*\}/s';
+        // Reset depth counter at the start of render
+        $this->currentDepth = 0;
+
+        // Use recursive regex pattern to match balanced curly braces
+        // (?1) refers to the first capturing group recursively
+        $pattern = '/(!?)\{\s*((?:[^{}]|(?R))*)\s*\}/';
 
         return preg_replace_callback($pattern, function ($matches) use ($vars, $default) {
             $isEscaped = !empty($matches[1]);
@@ -80,9 +104,25 @@ class Risma
                 return '{'.$content.'}';
             }
 
+            // Check recursion depth
+            $this->currentDepth++;
+            if ($this->currentDepth > $this->maxDepth) {
+                $this->currentDepth--;
+                throw new Exception("Maximum recursion depth exceeded.");
+            }
+
             try {
-                return $this->processExpression($content, $vars, $default);
+                // First recursively render any nested placeholders
+                $renderedContent = $this->render($content, $vars, $default);
+
+                // Then process the expression itself
+                $result = $this->processExpression($renderedContent, $vars, $default);
+
+                $this->currentDepth--;
+                return $result;
             } catch (Throwable $e) {
+                $this->currentDepth--;
+
                 // Modified logic: If default is false, re-throw the exception for PHPUnit
                 if (!$default) {
                     throw $e;
@@ -94,7 +134,7 @@ class Risma
 
     /**
      * Processes the content inside a single {} block.
-     * * @throws Exception
+     * @throws Exception
      */
     protected function processExpression(string $expression, array $vars, bool $default): string
     {
@@ -135,7 +175,7 @@ class Risma
 
     /**
      * Executes a single function within the chain.
-     * * @param  string  $token  The function part, e.g., "func1" or "func('arg')".
+     * @param  string  $token  The function part, e.g., "func1" or "func('arg')".
      * @param  mixed  $prevValue  The value from the previous step in the chain.
      * @param  bool  $isFirstCall  Whether this is the start of a direct @ call.
      * @throws Exception
@@ -179,7 +219,7 @@ class Risma
 
     /**
      * Resolves the function name to a callable (Custom -> Class -> Global).
-     * * @throws Exception
+     * @throws Exception
      */
     protected function resolveCallback(string $name): callable
     {
