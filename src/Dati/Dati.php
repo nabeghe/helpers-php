@@ -514,4 +514,46 @@ class Dati
 
         return null;
     }
+
+
+    /**
+     * Convert seconds to an array of time units (from largest to smallest).
+     *
+     * @param  int  $totalSeconds  Total number of seconds to convert
+     * @param  bool  $skipZeros  Whether to skip units with zero value
+     * @param  bool  $includeWeeks  Whether to include 'weeks' as a unit
+     * @return array{years?: int, months?: int, weeks?: int, days?: int, hours?: int, minutes?: int, seconds?: int} Associative array from largest to smallest unit
+     */
+    public static function secondsToTimeUnits(int $totalSeconds, bool $skipZeros = false, bool $includeWeeks = true): array
+    {
+        $units = [
+            'years' => 365 * 24 * 3600,
+            'months' => 30 * 24 * 3600,
+            'weeks' => 7 * 24 * 3600,
+            'days' => 24 * 3600,
+            'hours' => 3600,
+            'minutes' => 60,
+            'seconds' => 1,
+        ];
+
+        if (!$includeWeeks) {
+            unset($units['weeks']);
+        }
+
+        $result = [];
+        $remaining = abs($totalSeconds);
+
+        foreach ($units as $unit => $divisor) {
+            $value = intdiv($remaining, $divisor);
+            $remaining %= $divisor;
+
+            if ($skipZeros && $value === 0) {
+                continue;
+            }
+
+            $result[$unit] = $value;
+        }
+
+        return $result;
+    }
 }
